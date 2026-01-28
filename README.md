@@ -48,12 +48,20 @@ The file `stock_data.csv` must contain the following columns:
 
 ## Run the Application
 
-1. Install dependencies : pip install -r requirements.txt
-2. Run dashboard : streamlit run ui.py
+1. Install dependencies :
+   ```pip install -r requirements.txt```
+2. Run dashboard :
+   ```streamlit run ui.py```
 
 - First run: model is trained and saved.
 - Next runs: saved model is loaded and reused.
 - The app opens automatically in the browser.
+
+---
+
+## Results
+
+<img width="2560" height="1440" alt="Screenshot (17)" src="https://github.com/user-attachments/assets/185f21ac-395f-4165-89fe-413c67a89306" />
 
 ---
 
