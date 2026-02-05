@@ -13,23 +13,17 @@ from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Dropout, Dense
 from tensorflow.keras.optimizers import Adam
 
-# --------------------------------------------------
 # Constants
-# --------------------------------------------------
 MODEL_PATH = "sentiment_model.h5"
 TOKENIZER_PATH = "tokenizer.pkl"
 MAX_LEN = 32
 VOCAB_SIZE = 1000
 
-# --------------------------------------------------
 # NLTK
-# --------------------------------------------------
 nltk.download("stopwords")
 STOP_WORDS = set(stopwords.words("english"))
 
-# --------------------------------------------------
 # Preprocessing
-# --------------------------------------------------
 def clean_text(text):
     text = text.lower()
     text = re.sub(r'@[A-Za-z0-9_]+', '', text)
@@ -39,9 +33,7 @@ def clean_text(text):
     text = ' '.join(word for word in text.split() if word not in STOP_WORDS)
     return text
 
-# --------------------------------------------------
-# Load OR Train Model
-# --------------------------------------------------
+# Load or Train Model
 @st.cache_resource
 def load_or_train_model():
     # IF model already exists → load
@@ -51,7 +43,7 @@ def load_or_train_model():
             tokenizer = pickle.load(f)
         return model, tokenizer
 
-    # ELSE → train once and save
+    # Else, train once and save
     file = pd.read_csv("stock_data.csv")
 
     texts = file.Text
@@ -87,22 +79,18 @@ def load_or_train_model():
 
     model.fit(padded, np.array(labels), epochs=5, verbose=0)
 
-    # SAVE FOR FUTURE RUNS
+    # Save model
     model.save(MODEL_PATH)
     with open(TOKENIZER_PATH, "wb") as f:
         pickle.dump(tokenizer, f)
 
     return model, tokenizer
 
-# --------------------------------------------------
 # Load artifacts
-# --------------------------------------------------
 model, tokenizer = load_or_train_model()
 
-# --------------------------------------------------
 # Streamlit UI
-# --------------------------------------------------
-st.title("📈 Financial Sentiment Analysis")
+st.title("Financial Sentiment Analysis")
 st.write("Enter a financial statement or market-related sentence to analyze its sentiment.")
 
 user_input = st.text_area("📝 Type your financial news or statement here:")
@@ -121,7 +109,7 @@ if st.button("Analyze Sentiment"):
         )
 
         pred = model.predict(padded, verbose=0)[0][0]
-        sentiment = "🟢 Positive" if pred >= 0.5 else "🔴 Negative"
+        sentiment = "Positive" if pred >= 0.5 else "Negative"
 
         st.subheader("Sentiment Result:")
         st.success(sentiment)
